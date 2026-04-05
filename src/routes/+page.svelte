@@ -91,6 +91,6 @@
 		class="fixed bottom-4 right-4 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-full shadow-lg transition-colors text-sm font-medium z-20"
 		class:opacity-75={confirmClear}
 	>
-		{confirmClear ? 'Confirm Clear' : 'Clear Sheet'}
+		{confirmClear ? 'Confirm Clear Sheet' : 'Clear Sheet'}
 	</button>
 </main>

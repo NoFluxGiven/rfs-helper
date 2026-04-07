@@ -10,7 +10,7 @@ export class Roll {
         return total > target;
     }
 
-    static isLevelUp(rolls: number[], target: number): boolean {
+    static isLevelUp(rolls: number[]): boolean {
         if (rolls.every((r) => r === 6)) {
             return true;
         }

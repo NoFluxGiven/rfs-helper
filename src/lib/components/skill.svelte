@@ -2,6 +2,7 @@
     import { fade } from "svelte/transition";
     import type { Sheet } from "$lib/shoes/sheet.type";
     import { SkillItem } from "$lib/shoes/skill";
+    import { Roll } from "$lib/shoes/roll";
 
     interface Props {
         skill: SkillItem;
@@ -43,7 +44,7 @@
 
         const interval = setInterval(() => {
             animatedDice = animatedDice.map(() => Math.floor(Math.random() * 6) + 1);
-        }, 100); // Update every 100ms
+        }, 50);
 
         // Simulate roll after animation
         setTimeout(() => {
@@ -57,6 +58,11 @@
             } else {
                 showNotification('failure', `Failure. +1 XP. Rolled ${result.total} (${result.dice.join(", ")}) against DC ${result.dc}.`);
                 sheet.xp += 1;
+            }
+
+            if (Roll.isLevelUp(result.dice)) {
+                showNotification('success', `Level up! You can now advance this skill.`);
+                learnSkill();
             }
 
             // Prompt for using XP for advancement IF they have enough XP to change all dice to 6s
@@ -81,7 +87,7 @@
 
 <div class="flex items-center justify-between">
     <div class="flex items-center space-x-2">
-        <span class="text-lg font-medium text-gray-800">{skill.name}</span>
+        <span class="text-lg font-medium text-gray-800">SKILL: {skill.name}</span>
         <span class="text-xl text-blue-600">{skill.level}</span>
         {#if showXpPrompt}
             <div transition:fade class="flex items-center space-x-2 bg-yellow-100 p-2 rounded">

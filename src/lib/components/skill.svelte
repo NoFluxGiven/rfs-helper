@@ -10,6 +10,8 @@
         showNotification: (type: string, message: string) => void;
     }
 
+    const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
     let { skill, sheet, showNotification }: Props = $props()
 
     let rolling = $state(false);
@@ -26,7 +28,7 @@
         sheet.skills.push( newSkill );
     }
 
-    const rollSkill = () => {
+    const rollSkill = async () => {
         // Prompt for DC
         const dcString = prompt("Enter difficulty (DC) for this roll:", "4");
         if (dcString === null) return; // User cancelled
@@ -47,7 +49,7 @@
         }, 50);
 
         // Simulate roll after animation
-        setTimeout(() => {
+        setTimeout(async () => {
             clearInterval(interval);
             const result = skill.roll(dc);
             rolling = false;
@@ -62,6 +64,7 @@
 
             if (Roll.isLevelUp(result.dice)) {
                 showNotification('success', `Level up! You can now advance this skill.`);
+                await wait(500);
                 learnSkill();
             }
 
@@ -87,7 +90,7 @@
 
 <div class="flex items-center justify-between">
     <div class="flex items-center space-x-2">
-        <span class="text-lg font-medium text-gray-800">SKILL: {skill.name}</span>
+        <span class="text-lg font-medium text-gray-800">{skill.name}</span>
         <span class="text-xl text-blue-600">{skill.level}</span>
         {#if showXpPrompt}
             <div transition:fade class="flex items-center space-x-2 bg-yellow-100 p-2 rounded">

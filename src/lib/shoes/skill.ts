@@ -6,7 +6,7 @@ interface RollResult {
 	total: number;
 	isSuccess: boolean;
 	isLevelUp: boolean;
-	isManual: boolean;
+	forceValue: number;
 	dc: number;
 }
 
@@ -20,15 +20,18 @@ export class SkillItem {
 		return new SkillItem(newName, this.level + 1);
 	}
 
-	roll(dc: number = -1, traits: TraitItem[] = []): RollResult{
-		const results = Roll.d6(this.level, traits);
+	roll(dc: number = -1, traits: TraitItem[] = [], forceValue=-1): RollResult{
+		let results = Roll.d6(this.level, traits);
+
+		if (forceValue > 0) {
+			results = results.map(x => forceValue);
+		}
 
 		const isSuccess = Roll.isSuccess(results, dc);
-		const isLevelUp = Roll.isLevelUp(results, dc);
-		const isManual = dc === -1;
+		const isLevelUp = Roll.isLevelUp(results);
 		const total = results.reduce((a, b) => a + b, 0);
 
-		return { dice: results, total, isSuccess, isLevelUp, isManual, dc };
+		return { dice: results, total, isSuccess, isLevelUp, forceValue, dc };
 	}
 
 	toString() {

@@ -29,9 +29,16 @@
     }
 
     const rollSkill = async () => {
+        let forceValue = -1;
+
         // Prompt for DC
         const dcString = prompt("Enter difficulty (DC) for this roll:", "4");
         if (dcString === null) return; // User cancelled
+        if (dcString.trim() === "!") {
+            // GM mode: auto success + level up, no XP gain
+            forceValue = 6;
+            return;
+        }
         const dc = parseInt(dcString);
         if (isNaN(dc) || dc < 1) {
             alert("Invalid DC. Please enter a positive integer.");
@@ -51,21 +58,21 @@
         // Simulate roll after animation
         setTimeout(async () => {
             clearInterval(interval);
-            const result = skill.roll(dc);
+            const result = skill.roll(dc, [], forceValue);
             rolling = false;
             rollResult = result;
 
             if (result.isSuccess) {
-                showNotification('success', `Success! Rolled ${result.total} (${result.dice.join(", ")}) against DC ${result.dc}.`);
+                if (Roll.isLevelUp(result.dice)) {
+                    showNotification('success', `Success with Level Up! Rolled ${result.total} (${result.dice.join(", ")}) against DC ${result.dc}.`);
+                    await wait(500);
+                    learnSkill();
+                }else{
+                    showNotification('success', `Success! Rolled ${result.total} (${result.dice.join(", ")}) against DC ${result.dc}.`);
+                }
             } else {
                 showNotification('failure', `Failure. +1 XP. Rolled ${result.total} (${result.dice.join(", ")}) against DC ${result.dc}.`);
                 sheet.xp += 1;
-            }
-
-            if (Roll.isLevelUp(result.dice)) {
-                showNotification('success', `Level up! You can now advance this skill.`);
-                await wait(500);
-                learnSkill();
             }
 
             // Prompt for using XP for advancement IF they have enough XP to change all dice to 6s

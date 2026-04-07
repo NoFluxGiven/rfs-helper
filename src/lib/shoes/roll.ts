@@ -7,7 +7,7 @@ export class Roll {
 
     static isSuccess(rolls: number[], target: number): boolean {
         const total = rolls.reduce((a, b) => a + b, 0);
-        return total > target;
+        return total >= target;
     }
 
     static isLevelUp(rolls: number[]): boolean {

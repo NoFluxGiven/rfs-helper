@@ -32,12 +32,12 @@
         let forceValue = -1;
 
         // Prompt for DC
-        const dcString = prompt("Enter difficulty (DC) for this roll:", "4");
+        let dcString = prompt("Enter difficulty (DC) for this roll:", "4");
         if (dcString === null) return; // User cancelled
         if (dcString.trim() === "!") {
             // GM mode: auto success + level up, no XP gain
             forceValue = 6;
-            return;
+            dcString = "1";
         }
         const dc = parseInt(dcString);
         if (isNaN(dc) || dc < 1) {

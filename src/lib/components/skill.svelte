@@ -67,6 +67,7 @@
                     showNotification('success', `Success with Level Up! Rolled ${result.total} (${result.dice.join(", ")}) against DC ${result.dc}.`);
                     await wait(500);
                     learnSkill();
+                    return;
                 }else{
                     showNotification('success', `Success! Rolled ${result.total} (${result.dice.join(", ")}) against DC ${result.dc}.`);
                 }
